@@ -201,7 +201,7 @@ html[data-theme="light"] .grain { opacity: 0.1; }
   top: 0;
   z-index: 5;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 0.75rem 1rem;
   padding: 0.85rem 0 0.9rem;
@@ -221,7 +221,11 @@ html[data-theme="light"] .grain { opacity: 0.1; }
   background: linear-gradient(to bottom, color-mix(in srgb, var(--bg0) 78%, transparent), transparent);
 }
 
-.brand-lockup { min-width: 10rem; }
+.brand-lockup {
+  width: 12.5rem;
+  flex: 0 0 12.5rem;
+  height: 3.35rem;
+}
 
 .brand {
   margin: 0;
@@ -238,15 +242,38 @@ html[data-theme="light"] .grain { opacity: 0.1; }
   margin: 0.2rem 0 0;
   color: var(--faint);
   font-size: 0.84rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tools {
   margin-left: auto;
+  min-width: 0;
+  flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.tools-pin,
+.tools-rest {
+  display: flex;
   align-items: center;
   gap: 0.45rem;
 }
+
+.tools-pin { flex: none; }
+
+.tools-rest {
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tools-rest::-webkit-scrollbar { display: none; }
 
 .seg {
   display: inline-flex;
@@ -275,7 +302,33 @@ html[data-theme="light"] .grain { opacity: 0.1; }
 .seg button[aria-pressed="true"] {
   background: var(--ink);
   color: var(--bg0);
+  font-weight: 500;
 }
+
+.lang-switch,
+.theme-switch { flex: none; }
+
+.lang-switch button,
+.theme-switch button {
+  width: 2.85rem;
+  min-width: 2.85rem;
+  padding: 0;
+  flex: none;
+}
+
+.tools .btn.feature,
+.tools .menu > summary,
+.tools .btn.primary {
+  flex: none;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.tools .btn.feature { width: 8.8rem; }
+.tools .menu > summary { width: 13.6rem; }
+.tools .btn.primary { width: 11.4rem; }
+.board-tools .seg { flex: none; }
+.board-tools .seg button { width: 5.8rem; padding: 0; }
 
 .btn, .menu > summary {
   border: 1px solid var(--line);
@@ -819,12 +872,14 @@ html[data-theme="light"] .grain { opacity: 0.1; }
 
 @media (max-width: 720px) {
   .shell { width: min(1120px, calc(100% - 1rem)); }
+  .topbar { flex-wrap: wrap; }
+  .brand-lockup { width: auto; flex: 1 1 12.5rem; }
   .tools {
     margin-left: 0;
     width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    overflow: visible;
     padding-bottom: 0.15rem;
   }
   .tools::-webkit-scrollbar { display: none; }

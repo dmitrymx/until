@@ -382,18 +382,21 @@ export default function App() {
             <p className="tagline">{t(lang, 'tagline')}</p>
           </div>
           <div className="tools">
-            <div className="seg" role="group" aria-label={t(lang, 'language')}>
-              <button type="button" aria-pressed={lang === 'ru'} onClick={() => setLang('ru')}>RU</button>
-              <button type="button" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>EN</button>
+            <div className="tools-pin">
+              <div className="seg lang-switch" role="group" aria-label={t(lang, 'language')}>
+                <button type="button" aria-pressed={lang === 'ru'} onClick={() => setLang('ru')}>RU</button>
+                <button type="button" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>EN</button>
+              </div>
+              <div className="seg theme-switch" role="group" aria-label={t(lang, 'theme')}>
+                <button type="button" aria-pressed={theme === 'light'} aria-label={t(lang, 'light')} onClick={() => setTheme('light')}>
+                  <Sun />
+                </button>
+                <button type="button" aria-pressed={theme === 'dark'} aria-label={t(lang, 'dark')} onClick={() => setTheme('dark')}>
+                  <Moon />
+                </button>
+              </div>
             </div>
-            <div className="seg" role="group" aria-label={t(lang, 'theme')}>
-              <button type="button" aria-pressed={theme === 'light'} aria-label={t(lang, 'light')} onClick={() => setTheme('light')}>
-                <Sun />
-              </button>
-              <button type="button" aria-pressed={theme === 'dark'} aria-label={t(lang, 'dark')} onClick={() => setTheme('dark')}>
-                <Moon />
-              </button>
-            </div>
+            <div className="tools-rest">
             <button type="button" className="btn feature" onClick={() => setConvertOpen(true)}>{t(lang, 'convert')}</button>
             <details className="menu" ref={menuRef}>
               <summary>{t(lang, 'devices')}</summary>
@@ -406,6 +409,7 @@ export default function App() {
               </div>
             </details>
             <button type="button" className="btn primary" onClick={() => setEditor(blankSeed())}>{t(lang, 'newWish')}</button>
+            </div>
           </div>
         </header>
         <main id="content">{main}</main>
