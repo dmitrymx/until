@@ -81,6 +81,7 @@ export default function App() {
   const [photos, setPhotos] = useState<Record<string, string>>({})
   const [editor, setEditor] = useState<EditorSeed | null>(null)
   const [convertOpen, setConvertOpen] = useState(false)
+  const [navOpen, setNavOpen] = useState(false)
   const [toast, setToast] = useState('')
   const [loadError, setLoadError] = useState(false)
   const [version, setVersion] = useState(0)
@@ -177,7 +178,22 @@ export default function App() {
   const routeKey = route.name === 'board' ? 'board' : route.name === 'wish' ? route.id : route.code
   useEffect(() => {
     window.scrollTo(0, 0)
+    setNavOpen(false)
   }, [routeKey])
+
+  useEffect(() => {
+    if (!navOpen) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setNavOpen(false)
+    }
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previous
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [navOpen])
 
   useEffect(() => {
     if (!wishes) return
@@ -264,6 +280,7 @@ export default function App() {
     link.click()
     window.setTimeout(() => URL.revokeObjectURL(url), 1500)
     setToast(t(lang, 'exported'))
+    setNavOpen(false)
     if (menuRef.current) menuRef.current.open = false
   }
 
@@ -287,6 +304,7 @@ export default function App() {
     } catch {
       setToast(t(lang, 'importFail'))
     }
+    setNavOpen(false)
     if (menuRef.current) menuRef.current.open = false
   }
 
@@ -376,12 +394,25 @@ export default function App() {
       <div className="grain" aria-hidden="true" />
       <a className="skip" href="#content">{t(lang, 'skip')}</a>
       <div className="shell">
+        {navOpen ? <button type="button" className="nav-shade" aria-label={t(lang, 'close')} onClick={() => setNavOpen(false)} /> : null}
         <header className={scrolled ? 'topbar is-scrolled' : 'topbar'}>
           <div className="brand-lockup">
             {onBoard ? <h1 className="brand" translate="no">Until</h1> : <a className="brand" href="#/" translate="no">Until</a>}
             <p className="tagline">{t(lang, 'tagline')}</p>
           </div>
-          <div className="tools">
+          <button
+            type="button"
+            className={navOpen ? 'burger is-open' : 'burger'}
+            aria-expanded={navOpen}
+            aria-controls="site-tools"
+            aria-label={t(lang, 'menu')}
+            onClick={() => setNavOpen((open) => !open)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+          <div id="site-tools" className={navOpen ? 'tools is-open' : 'tools'}>
             <div className="tools-pin">
               <div className="seg lang-switch" role="group" aria-label={t(lang, 'language')}>
                 <button type="button" aria-pressed={lang === 'ru'} onClick={() => setLang('ru')}>RU</button>
@@ -397,7 +428,7 @@ export default function App() {
               </div>
             </div>
             <div className="tools-rest">
-            <button type="button" className="btn feature" onClick={() => setConvertOpen(true)}>{t(lang, 'convert')}</button>
+            <button type="button" className="btn feature" onClick={() => { setNavOpen(false); setConvertOpen(true) }}>{t(lang, 'convert')}</button>
             <details className="menu" ref={menuRef}>
               <summary>{t(lang, 'devices')}</summary>
               <div className="menu-panel">
@@ -408,7 +439,7 @@ export default function App() {
                 </div>
               </div>
             </details>
-            <button type="button" className="btn primary" onClick={() => setEditor(blankSeed())}>{t(lang, 'newWish')}</button>
+            <button type="button" className="btn primary" onClick={() => { setNavOpen(false); setEditor(blankSeed()) }}>{t(lang, 'newWish')}</button>
             </div>
           </div>
         </header>
